@@ -15,7 +15,7 @@ test.describe('RSS datasource', () => {
       page,
       selectors,
     }) => {
-      const datasource = await readProvisionedDataSource({ fileName: 'datasource.yaml' });
+      const datasource = await readProvisionedDataSource<DataSourceOptions>({ fileName: 'datasource.yaml' });
       const configPage = await createDataSourceConfigPage({ type: datasource.type });
       const configEditor = new ConfigEditorHelper(page, configPage, selectors);
 
@@ -145,6 +145,10 @@ test.describe('RSS datasource', () => {
 
       const panel = new PanelHelper(dashboardPage, 'Table Google', selectors);
       await panel.checkIfNoErrors();
+
+      /**
+       * Check data fields and value returned via ds
+       */
       await panel.checkFieldValues(['author', 'id', 'title', 'updated']);
       await panel.checkDataValues(['Google Workspace']);
     });
