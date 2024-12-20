@@ -24,10 +24,21 @@
     {
       "datasource": {
         "type": "volkovlabs-rss-datasource",
-        "uid": "xmlsRv1"
+        "uid": "PE12154EB4CA97411"
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -50,36 +61,30 @@
         "x": 0,
         "y": 0
       },
-      "id": 2,
+      "id": 6,
       "options": {
-        "afterRender": "",
-        "content": "<div class=\"row\">\n  <p class=\"text\">{{title}}</p>\n  <p class=\"text\">{{description}}</p>\n  <a class=\"link\" href=\"{{link}}\"\">Link to documentation</a>\n<div>",
-        "contentPartials": [],
-        "defaultContent": "The query didn't return any results.",
-        "editor": {
-          "format": "auto",
-          "language": "html"
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
         },
-        "editors": ["styles"],
-        "externalScripts": [],
-        "externalStyles": [],
-        "helpers": "",
-        "renderMode": "everyRow",
-        "styles": ".row {\n  display: flex;\n  flex-direction: column;\n  padding: 10px 15px;\n}\n\n.text {\nmargin: 3px 0px;\n}\n\n.link {\n  color:coral;\n  font-weight: 600;\n  margin: 0;\n}",
-        "wrap": true
+        "showHeader": true
       },
       "targets": [
         {
           "datasource": {
             "type": "volkovlabs-rss-datasource",
-            "uid": "xmlsRv1"
+            "uid": "PE12154EB4CA97411"
           },
-          "feedType": "items",
+          "dateField": "updated",
+          "feedType": "channel",
           "refId": "A"
         }
       ],
-      "title": "Server RSS",
-      "type": "marcusolsson-dynamictext-panel"
+      "title": "Table Google",
+      "type": "table"
     },
     {
       "datasource": {
@@ -143,7 +148,7 @@
     {
       "datasource": {
         "type": "volkovlabs-rss-datasource",
-        "uid": "xmlsRv2"
+        "uid": "xmlsRv1"
       },
       "fieldConfig": {
         "defaults": {
@@ -169,35 +174,35 @@
         "x": 0,
         "y": 8
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "afterRender": "",
-        "content": "<table width=100% style='border:0'>\n  <tr>\n    <td width=\"*\" style='border:0'>\n      <h3><a target=\"_blank\" style=\"color: blue\" href=\"{{link}}\">{{title}}</a></h3>\n      {{{content:h4}}}\n  </tr>\n  <tr>\n    <td style='border:0'><b>{{date updated 'MMM, DD YYYY'}} by {{author}}</b></td>\n</table>",
+        "content": "<div class=\"row\">\n  <p class=\"text\">{{title}}</p>\n  <p class=\"text\">{{description}}</p>\n  <a class=\"link\" href=\"{{link}}\"\">Link to documentation</a>\n<div>",
         "contentPartials": [],
         "defaultContent": "The query didn't return any results.",
         "editor": {
           "format": "auto",
           "language": "html"
         },
-        "editors": [],
+        "editors": ["styles"],
         "externalScripts": [],
         "externalStyles": [],
         "helpers": "",
         "renderMode": "everyRow",
-        "styles": "",
+        "styles": ".row {\n  display: flex;\n  flex-direction: column;\n  padding: 10px 15px;\n}\n\n.text {\nmargin: 3px 0px;\n}\n\n.link {\n  color:coral;\n  font-weight: 600;\n  margin: 0;\n}",
         "wrap": true
       },
       "targets": [
         {
           "datasource": {
             "type": "volkovlabs-rss-datasource",
-            "uid": "xmlsRv2"
+            "uid": "xmlsRv1"
           },
           "feedType": "items",
           "refId": "A"
         }
       ],
-      "title": "Server Feed",
+      "title": "Server RSS",
       "type": "marcusolsson-dynamictext-panel"
     },
     {
@@ -267,6 +272,66 @@
     {
       "datasource": {
         "type": "volkovlabs-rss-datasource",
+        "uid": "xmlsRv2"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 1,
+      "options": {
+        "afterRender": "",
+        "content": "<table width=100% style='border:0'>\n  <tr>\n    <td width=\"*\" style='border:0'>\n      <h3><a target=\"_blank\" style=\"color: blue\" href=\"{{link}}\">{{title}}</a></h3>\n      {{{content:h4}}}\n  </tr>\n  <tr>\n    <td style='border:0'><b>{{date updated 'MMM, DD YYYY'}} by {{author}}</b></td>\n</table>",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "html"
+        },
+        "editors": [],
+        "externalScripts": [],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "everyRow",
+        "styles": "",
+        "wrap": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "volkovlabs-rss-datasource",
+            "uid": "xmlsRv2"
+          },
+          "feedType": "items",
+          "refId": "A"
+        }
+      ],
+      "title": "Server Feed",
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "type": "volkovlabs-rss-datasource",
         "uid": "xmlsRv3"
       },
       "fieldConfig": {
@@ -302,7 +367,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 24
       },
       "id": 3,
       "options": {
@@ -344,6 +409,6 @@
   "timezone": "",
   "title": "Local Feeds",
   "uid": "fe91dd52-a33a-4c1b-bdb8-10e4ede99a25",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

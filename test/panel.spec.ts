@@ -135,7 +135,7 @@ test.describe('RSS datasource', () => {
   });
 
   test.describe('Provisioning', () => {
-    test('Should return data', async ({ gotoDashboardPage, readProvisionedDashboard, grafanaVersion, selectors }) => {
+    test('Should return data', async ({ gotoDashboardPage, readProvisionedDashboard, selectors }) => {
       /**
        * Go To Panels dashboard localServer.json
        * return dashboardPage
@@ -143,31 +143,10 @@ test.describe('RSS datasource', () => {
       const dashboard = await readProvisionedDashboard({ fileName: 'localServer.json' });
       const dashboardPage = await gotoDashboardPage({ uid: dashboard.uid });
 
-      const panel = new PanelHelper(dashboardPage, 'Server RSS Table', selectors);
+      const panel = new PanelHelper(dashboardPage, 'Table Google', selectors);
       await panel.checkIfNoErrors();
-
-      await panel.checkContent(
-        `{
-  "data": [
-    {
-      "title": "RSS Tutorial",
-      "link": "https://www.w3schools.com/xml/xml_rss.asp",
-      "description": "New RSS tutorial on W3Schools"
-    },
-    {
-      "title": "XML Tutorial 1",
-      "link": "https://www.w3schools.com/xml",
-      "description": "New XML tutorial on W3Schools"
-    },
-    {
-      "title": "XML Tutorial 4",
-      "link": "https://www.w3schools.com/xml",
-      "description": "New XML tutorial on W3Schools"
-    }
-  ]
-}`,
-        grafanaVersion
-      );
+      await panel.checkFieldValues(['author', 'id', 'title', 'updated']);
+      await panel.checkDataValues(['Google Workspace']);
     });
   });
 });

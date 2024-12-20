@@ -1,4 +1,3 @@
-import * as semver from 'semver';
 import { Locator } from '@playwright/test';
 import { DashboardPage, E2ESelectorGroups, expect, Panel } from '@grafana/plugin-e2e';
 
@@ -28,11 +27,14 @@ export class PanelHelper {
     return this.get().getByTestId(this.selectors.components.Panels.Panel.content);
   }
 
-  public async checkContent(text: string, grafanaVersion: string) {
-    if (semver.gte(grafanaVersion, '11.3.0')) {
-      return expect(this.getContainer(), this.getMsg('Check Content')).toContainText(text);
-    }
-    return expect(this.get().getByTestId('data-testid text content'), this.getMsg('Check Content')).toContainText(text);
+  public async checkFieldValues(fieldsArray: string[]) {
+    const fields = this.panel.fieldNames;
+    return expect(fields).toContainText(fieldsArray);
+  }
+
+  public async checkDataValues(dataArray: string[]) {
+    const data = this.panel.data;
+    return expect(data).toContainText(dataArray);
   }
 
   public async checkIfNoErrors() {
