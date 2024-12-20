@@ -62,7 +62,7 @@ export const ParametersEditor = ({ query, onChange, onRunQuery }: Props) => {
     <>
       {Object.keys(params).map((param, i) => {
         return (
-          <InlineFieldRow key={i}>
+          <InlineFieldRow key={i} data-testid={TEST_IDS.parametersEditor.row}>
             <InlineField label="Parameter" grow>
               <Input
                 value={param}

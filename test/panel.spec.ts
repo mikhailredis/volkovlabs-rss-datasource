@@ -1,4 +1,6 @@
 import { test, expect } from '@grafana/plugin-e2e';
+import { ConfigEditorHelper, QueryEditorHelper, PanelHelper } from './utils';
+import { DataSourceOptions } from '../src/types';
 
 test.describe('RSS datasource', () => {
   test('Check grafana version', async ({ grafanaVersion }) => {
@@ -6,22 +8,166 @@ test.describe('RSS datasource', () => {
     expect(grafanaVersion).toEqual(grafanaVersion);
   });
 
-  test('Should display a Dynamic Text with Data Source', async ({ gotoDashboardPage, dashboardPage, page }) => {
-    /**
-     * Go To panels dashboard panels.json
-     * return dashboardPage
-     */
-    await gotoDashboardPage({ uid: 'O4tc_E6Gz' });
+  test.describe('Datasource config editor', () => {
+    test('Should render config editor', async ({
+      createDataSourceConfigPage,
+      readProvisionedDataSource,
+      page,
+      selectors,
+    }) => {
+      const datasource = await readProvisionedDataSource({ fileName: 'datasource.yaml' });
+      const configPage = await createDataSourceConfigPage({ type: datasource.type });
+      const configEditor = new ConfigEditorHelper(page, configPage, selectors);
 
-    /**
-     * Await content load
-     */
-    await page.waitForTimeout(1000);
+      await configEditor.checkPresenceURLEditor();
+    });
 
-    /**
-     * Find panel by title with data
-     * Should be visible
-     */
-    await expect(dashboardPage.getPanelByTitle('Volkov Labs YouTube').locator).toBeVisible();
+    test('"Save & test" should be successful when configuration is valid', async ({
+      createDataSourceConfigPage,
+      readProvisionedDataSource,
+      selectors,
+      page,
+    }) => {
+      const datasource = await readProvisionedDataSource<DataSourceOptions>({
+        fileName: 'datasource.yaml',
+      });
+      const configPage = await createDataSourceConfigPage({ type: datasource.type });
+      const configEditor = new ConfigEditorHelper(page, configPage, selectors);
+
+      await configEditor.checkPresenceURLEditor();
+
+      /**
+       * https://volkovlabs.io/blog/rss.xml
+       */
+      await configEditor.setPath(datasource.jsonData.feed);
+      await configEditor.checkSaveSuccess();
+    });
+
+    test('"Save & test" should be failed if invalid path', async ({
+      createDataSourceConfigPage,
+      readProvisionedDataSource,
+      selectors,
+      page,
+    }) => {
+      const datasource = await readProvisionedDataSource<DataSourceOptions>({
+        fileName: 'datasource.yaml',
+      });
+      const configPage = await createDataSourceConfigPage({ type: datasource.type });
+      const configEditor = new ConfigEditorHelper(page, configPage, selectors);
+
+      await configEditor.checkPresenceURLEditor();
+      await configEditor.setPath('https:');
+      await configEditor.checkSaveFail();
+    });
+  });
+
+  test.describe('Query editor', () => {
+    test('Should show query editor', async ({ page, panelEditPage, readProvisionedDataSource }) => {
+      const ds = await readProvisionedDataSource({ fileName: 'datasource.yaml' });
+      await panelEditPage.datasource.set(ds.name);
+      await panelEditPage.setVisualization('Table');
+
+      const queryEditor = new QueryEditorHelper(page, panelEditPage);
+      await queryEditor.checkPresence();
+      await queryEditor.checkRequestField();
+    });
+
+    test('Should return data', async ({ page, panelEditPage, readProvisionedDataSource }) => {
+      const ds = await readProvisionedDataSource({ fileName: 'datasource.yaml' });
+
+      await panelEditPage.datasource.set(ds.name);
+      await panelEditPage.setVisualization('Table');
+
+      const queryEditor = new QueryEditorHelper(page, panelEditPage);
+
+      await queryEditor.checkPresence();
+      await queryEditor.checkRequestField();
+      await queryEditor.changeRequestType('Returns channel data only');
+      await queryEditor.checkDateFieldPresence();
+      await queryEditor.checkDateFilter('');
+
+      /**
+       * Check data fields
+       */
+      await expect(panelEditPage.panel.fieldNames).toContainText([
+        'title',
+        'description',
+        'generator',
+        'lastBuildDate',
+        'link',
+        'webMaster',
+        'ttl',
+        'imageUrl',
+        'imageTitle',
+        'imageLink',
+      ]);
+
+      /**
+       * Check data values should be one row
+       */
+      await expect(panelEditPage.panel.data).toContainText([
+        'Volkov Labs Blog',
+        'Volkov Labs Blog',
+        'https://github.com/jpmonette/feed',
+      ]);
+    });
+
+    test('Should show parameters editor', async ({ page, selectors, panelEditPage, readProvisionedDataSource }) => {
+      const ds = await readProvisionedDataSource({ fileName: 'datasource.yaml' });
+
+      await panelEditPage.datasource.set(ds.name);
+      await panelEditPage.setVisualization('Table');
+
+      const queryEditor = new QueryEditorHelper(page, panelEditPage);
+
+      await queryEditor.checkPresence();
+      await queryEditor.checkRequestField();
+
+      await queryEditor.checkDateFieldPresence();
+      await queryEditor.checkDateFilter('');
+
+      const parametersEditor = queryEditor.getParametersEditor();
+
+      await parametersEditor.checkAddButtonPresence();
+      await parametersEditor.addParameter();
+      await parametersEditor.checkRowPresence();
+    });
+  });
+
+  test.describe('Provisioning', () => {
+    test('Should return data', async ({ gotoDashboardPage, readProvisionedDashboard, grafanaVersion, selectors }) => {
+      /**
+       * Go To Panels dashboard localServer.json
+       * return dashboardPage
+       */
+      const dashboard = await readProvisionedDashboard({ fileName: 'localServer.json' });
+      const dashboardPage = await gotoDashboardPage({ uid: dashboard.uid });
+
+      const panel = new PanelHelper(dashboardPage, 'Server RSS Table', selectors);
+      await panel.checkIfNoErrors();
+
+      await panel.checkContent(
+        `{
+  "data": [
+    {
+      "title": "RSS Tutorial",
+      "link": "https://www.w3schools.com/xml/xml_rss.asp",
+      "description": "New RSS tutorial on W3Schools"
+    },
+    {
+      "title": "XML Tutorial 1",
+      "link": "https://www.w3schools.com/xml",
+      "description": "New XML tutorial on W3Schools"
+    },
+    {
+      "title": "XML Tutorial 4",
+      "link": "https://www.w3schools.com/xml",
+      "description": "New XML tutorial on W3Schools"
+    }
+  ]
+}`,
+        grafanaVersion
+      );
+    });
   });
 });

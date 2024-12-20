@@ -20,7 +20,6 @@
   "graphTooltip": 0,
   "id": 2,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -55,6 +54,7 @@
       "options": {
         "afterRender": "",
         "content": "<div class=\"row\">\n  <p class=\"text\">{{title}}</p>\n  <p class=\"text\">{{description}}</p>\n  <a class=\"link\" href=\"{{link}}\"\">Link to documentation</a>\n<div>",
+        "contentPartials": [],
         "defaultContent": "The query didn't return any results.",
         "editor": {
           "format": "auto",
@@ -68,7 +68,6 @@
         "styles": ".row {\n  display: flex;\n  flex-direction: column;\n  padding: 10px 15px;\n}\n\n.text {\nmargin: 3px 0px;\n}\n\n.link {\n  color:coral;\n  font-weight: 600;\n  margin: 0;\n}",
         "wrap": true
       },
-      "pluginVersion": "4.5.0",
       "targets": [
         {
           "datasource": {
@@ -89,17 +88,6 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -112,8 +100,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -125,16 +112,21 @@
       },
       "id": 5,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": ["sum"],
-          "show": false
+        "afterRender": "",
+        "content": "```json\n{{{json @root}}}\n```",
+        "contentPartials": [],
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "markdown"
         },
-        "showHeader": true
+        "editors": [],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "allRows",
+        "styles": "",
+        "wrap": true
       },
-      "pluginVersion": "10.3.1",
       "targets": [
         {
           "datasource": {
@@ -146,7 +138,7 @@
         }
       ],
       "title": "Server RSS Table",
-      "type": "table"
+      "type": "marcusolsson-dynamictext-panel"
     },
     {
       "datasource": {
@@ -181,6 +173,7 @@
       "options": {
         "afterRender": "",
         "content": "<table width=100% style='border:0'>\n  <tr>\n    <td width=\"*\" style='border:0'>\n      <h3><a target=\"_blank\" style=\"color: blue\" href=\"{{link}}\">{{title}}</a></h3>\n      {{{content:h4}}}\n  </tr>\n  <tr>\n    <td style='border:0'><b>{{date updated 'MMM, DD YYYY'}} by {{author}}</b></td>\n</table>",
+        "contentPartials": [],
         "defaultContent": "The query didn't return any results.",
         "editor": {
           "format": "auto",
@@ -194,7 +187,6 @@
         "styles": "",
         "wrap": true
       },
-      "pluginVersion": "4.5.0",
       "targets": [
         {
           "datasource": {
@@ -238,8 +230,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -260,7 +251,6 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.3.1",
       "targets": [
         {
           "datasource": {
@@ -304,8 +294,7 @@
                 "value": 80
               }
             ]
-          },
-          "unitScale": true
+          }
         },
         "overrides": []
       },
@@ -326,7 +315,6 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.3.1",
       "targets": [
         {
           "datasource": {
@@ -341,8 +329,9 @@
       "type": "table"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
@@ -355,6 +344,6 @@
   "timezone": "",
   "title": "Local Feeds",
   "uid": "fe91dd52-a33a-4c1b-bdb8-10e4ede99a25",
-  "version": 9,
+  "version": 1,
   "weekStart": ""
 }
