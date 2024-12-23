@@ -22,6 +22,7 @@ services:
     profiles:
       - dev
       - main
+      - dependency
 
   grafana-main:
     image: grafana/grafana:main
@@ -36,6 +37,20 @@ services:
       - ./provisioning:/etc/grafana/provisioning
     profiles:
       - main
+
+  grafana-dep:
+    image: grafana/grafana:10.1.0
+    ports:
+      - 3000:3000/tcp
+    environment:
+      - GF_DEFAULT_APP_MODE=development
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_INSTALL_PLUGINS=marcusolsson-dynamictext-panel,yesoreyeram-infinity-datasource
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/volkovlabs-rss-datasource
+      - ./provisioning:/etc/grafana/provisioning
+    profiles:
+      - dependency
 
   test:
     build:

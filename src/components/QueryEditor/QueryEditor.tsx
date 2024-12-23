@@ -43,7 +43,7 @@ export class QueryEditor extends PureComponent<Props> {
     const { onChange, onRunQuery } = this.props;
 
     return (
-      <>
+      <div data-testid={TEST_IDS.queryEditor.root}>
         <InlineFieldRow>
           <InlineField label="Request" labelWidth={8} grow={true}>
             <Select
@@ -74,7 +74,7 @@ export class QueryEditor extends PureComponent<Props> {
         <CollapsableSection label="URL Parameters" isOpen={true}>
           <ParametersEditor query={query} onChange={onChange} onRunQuery={onRunQuery} />
         </CollapsableSection>
-      </>
+      </div>
     );
   }
 }
