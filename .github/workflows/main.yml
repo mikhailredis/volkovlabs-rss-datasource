@@ -9,7 +9,7 @@ on:
       - main
 
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
   workflow_dispatch:
 
@@ -23,8 +23,8 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
@@ -36,7 +36,7 @@ jobs:
         run: docker compose --profile main up -d
 
       - name: Run e2e tests
-        run: docker compose down
+        run: npm run test:e2e:docker
 
       - name: Stop Grafana
         run: docker compose down
